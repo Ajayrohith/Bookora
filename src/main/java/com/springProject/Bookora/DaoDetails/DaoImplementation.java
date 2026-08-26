@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.springProject.Bookora.Entities.Booking;
+import com.springProject.Bookora.Entities.Eventdetails;
 import com.springProject.Bookora.Entities.User;
 
 import jakarta.persistence.EntityManager;
@@ -23,6 +25,11 @@ public class DaoImplementation implements DaoInterface{
     public User updateuser(User user) {
         User daouserobj = entitymanagerObj.merge(user);
         return daouserobj;
+    }
+
+    @Override
+    public User finduserbyuserId(int id) {
+        return entitymanagerObj.find(User.class, id);
     }
 
     @Override
@@ -48,6 +55,27 @@ public class DaoImplementation implements DaoInterface{
     } catch (NoResultException e) {
         return null;
     }
+    }
+
+    @Override
+    public Eventdetails addnewEvent(Eventdetails event) {
+        return entitymanagerObj.merge(event);
+    }
+
+    @Override
+    public Booking createNewbooking(Booking booking) {
+        return entitymanagerObj.merge(booking);
+    }
+
+    @Override
+    public Eventdetails findEventbyId(int eventID) {
+        return entitymanagerObj.find(Eventdetails.class, eventID);
+    }
+
+    @Override
+    public List<User> retriveuserList() {
+        
+        return entitymanagerObj.createQuery("Select u from User u",User.class).getResultList();
     }
 
 }

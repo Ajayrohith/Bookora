@@ -1,10 +1,15 @@
 package com.springProject.Bookora.Entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,6 +29,10 @@ public class User {
 
     @Column(name = "password")
     private String passWord;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Booking> bookingDetails;
+
 
     public User() {
     }
@@ -70,6 +79,26 @@ public class User {
     public String toString() {
         return "User [userId=" + userId + ", userName=" + userName + ", age=" + age + ", passWord=" + passWord + "]";
     }
+
+    public List<Booking> getBookingDetails() {
+        return bookingDetails;
+    }
+
+    public void setBookingDetails(List<Booking> bookingDetails) {
+        this.bookingDetails = bookingDetails;
+    }
+
+    public void addBookingstoUser(Booking tempBooking)
+    {
+        if(bookingDetails == null)
+        {
+            System.out.println("Currently the bookings are null for the user hence creating a new List");
+            bookingDetails = new ArrayList<>();
+        }
+        bookingDetails.add(tempBooking);
+        tempBooking.setUser(this);
+    }
+    
 
     
 
