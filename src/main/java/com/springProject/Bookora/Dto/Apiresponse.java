@@ -1,4 +1,4 @@
-package com.springProject.Bookora.Entities;
+package com.springProject.Bookora.Dto;
 
 public class Apiresponse {
 

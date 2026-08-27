@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.springProject.Bookora.Entities.Apiresponse;
+import com.springProject.Bookora.Dto.Apiresponse;
+import com.springProject.Bookora.Dto.UserRetrievalResponse;
+import com.springProject.Bookora.Dto.Userloginrequest;
 import com.springProject.Bookora.Entities.User;
-import com.springProject.Bookora.Entities.UserRetrievalResponse;
-import com.springProject.Bookora.Entities.Userloginrequest;
 import com.springProject.Bookora.ServiceDetails.Servicelayer;
 
 @RestController

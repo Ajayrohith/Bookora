@@ -6,12 +6,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.springProject.Bookora.DaoDetails.DaoInterface;
-
+import com.springProject.Bookora.Dto.UserRetrievalResponse;
+import com.springProject.Bookora.Dto.Userloginrequest;
 import com.springProject.Bookora.Entities.Booking;
 import com.springProject.Bookora.Entities.Eventdetails;
 import com.springProject.Bookora.Entities.User;
-import com.springProject.Bookora.Entities.UserRetrievalResponse;
-import com.springProject.Bookora.Entities.Userloginrequest;
 
 import jakarta.transaction.Transactional;
 
