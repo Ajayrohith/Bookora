@@ -2,12 +2,15 @@ package com.springProject.Bookora.ControllerPackage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springProject.Bookora.Dto.Apiresponse;
+import com.springProject.Bookora.Dto.BookingRetrievalResponse;
 import com.springProject.Bookora.Dto.BookingsRequest;
 import com.springProject.Bookora.Entities.Booking;
 import com.springProject.Bookora.ServiceDetails.Servicelayer;
@@ -29,7 +32,7 @@ public class BookingsController {
         try{
             Booking tempBooking = service.createNewBooking(bookingRequest.getUserId(),bookingRequest.getEventPoolId());
             System.out.println("The controller booking details : "+ tempBooking.toString());
-            return ResponseEntity.status(HttpStatus.CREATED).body(new Apiresponse(0, "The booking has been created"));
+            return ResponseEntity.ok(new Apiresponse(0, "The booking has been created"));
 
         }
         catch(Exception e)
@@ -37,6 +40,17 @@ public class BookingsController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Apiresponse(0, "Exception in creating booking"));
 
         }
+    }
+
+    @GetMapping("/{bookingId}")
+    public ResponseEntity<BookingRetrievalResponse> getBookingById(@PathVariable int bookingId)
+    {
+        BookingRetrievalResponse bookingDetails = service.findBookingDetails(bookingId);
+        if(bookingDetails == null)
+        {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(bookingDetails);
     }
 
 }

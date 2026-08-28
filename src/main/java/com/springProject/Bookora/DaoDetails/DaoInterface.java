@@ -24,4 +24,6 @@ public interface DaoInterface {
 
     public Booking createNewbooking(Booking booking);
 
+    public Booking findBookingbyId(int bookingId);
+
 }

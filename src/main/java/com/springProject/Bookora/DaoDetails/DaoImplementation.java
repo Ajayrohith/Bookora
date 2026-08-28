@@ -68,6 +68,11 @@ public class DaoImplementation implements DaoInterface{
     }
 
     @Override
+    public Booking findBookingbyId(int bookingId) {
+        return entitymanagerObj.find(Booking.class, bookingId);
+    }
+
+    @Override
     public Eventdetails findEventbyId(int eventID) {
         return entitymanagerObj.find(Eventdetails.class, eventID);
     }

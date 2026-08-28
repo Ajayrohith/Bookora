@@ -30,16 +30,9 @@ public class LoginController {
     @PostMapping("/createuser")
     public ResponseEntity<Apiresponse> CreateUser(@RequestBody User user)
     {
-         try{
-            User userdetails = service.createNewUser(user);       
-         System.out.println(userdetails.toString());
-         return ResponseEntity.status(HttpStatus.CREATED).body(new Apiresponse(0, "User created successfully"));
-         }
-         catch(Exception e)
-         {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new Apiresponse(-1, "User already exists"));
-         }
-        
+        User userdetails = service.createNewUser(user);       
+        System.out.println(userdetails.toString());
+        return ResponseEntity.status(HttpStatus.CREATED).body(new Apiresponse(0, "User created successfully"));
     }
 
     @PostMapping("/authenticate")

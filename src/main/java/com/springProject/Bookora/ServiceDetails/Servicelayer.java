@@ -2,15 +2,22 @@ package com.springProject.Bookora.ServiceDetails;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.springProject.Bookora.DaoDetails.DaoInterface;
+import com.springProject.Bookora.Dto.BookingRetrievalResponse;
+import com.springProject.Bookora.Dto.EventRetrievalResponse;
 import com.springProject.Bookora.Dto.UserRetrievalResponse;
 import com.springProject.Bookora.Dto.Userloginrequest;
 import com.springProject.Bookora.Entities.Booking;
 import com.springProject.Bookora.Entities.Eventdetails;
 import com.springProject.Bookora.Entities.User;
+import com.springProject.Bookora.ExceptionPackage.EventDetailsException;
+import com.springProject.Bookora.ExceptionPackage.UserdetailsException;
 
 import jakarta.transaction.Transactional;
 
@@ -19,9 +26,13 @@ public class Servicelayer {
 
     private DaoInterface daoobject;
 
-    public Servicelayer(DaoInterface daoobject)
+    private JsonMapper jsonmapper;
+
+
+    public Servicelayer(DaoInterface daoobject,JsonMapper jsonmapper)
     {
-        this.daoobject = daoobject;
+        this.daoobject = daoobject; 
+        this.jsonmapper = jsonmapper;      
     }
 
     @Transactional
@@ -30,7 +41,7 @@ public class Servicelayer {
         User existinguser = daoobject.findUserbyUsername(sUser.getUserName());
         if(existinguser != null)
         {
-            throw new RuntimeException("User already exists");
+            throw new UserdetailsException("User already exists");
         }
         else{
              return daoobject.updateuser(sUser);
@@ -73,7 +84,37 @@ public class Servicelayer {
         return daoobject.addnewEvent(event);
      }
      
+
+     public Eventdetails findEventbyid(int eventId)
+     {
+        return daoobject.findEventbyId(eventId);
+     }
   
+    @Transactional
+    public Eventdetails updateEventDetails(Map<String, Object> patchPayload, int eventId)
+     {
+        Eventdetails tempEvent = daoobject.findEventbyId(eventId);
+
+        Eventdetails PatchEventDetails = null;
+
+        if(tempEvent == null)
+        {
+            throw new EventDetailsException("The given evenId not found");
+        }
+
+        if(patchPayload.containsKey("id"))
+        {
+            throw new EventDetailsException("The id cannot be passed in the payload");
+        }
+
+        try {
+             PatchEventDetails = jsonmapper.updateValue(tempEvent, patchPayload);
+        } catch (JsonMappingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return daoobject.addnewEvent(PatchEventDetails);
+     }
      //////////////////////End Business Logic for EventDetails Part /////////////////////////////
 
      ///  //////////////////////Start Business Logic for Bookings Part /////////////////////////////
@@ -86,7 +127,7 @@ public class Servicelayer {
 
         if(tempuser == null)
         {
-            throw new RuntimeException("The user does not exist");
+            throw new UserdetailsException("The user does not exist");
         }
 
         Eventdetails tempevent = daoobject.findEventbyId(eventPoolId);
@@ -111,6 +152,30 @@ public class Servicelayer {
 
 
         return daoobject.createNewbooking(booking);
+     }
+
+     public BookingRetrievalResponse findBookingDetails(int bookingId)
+     {
+
+        Booking tempBooking = daoobject.findBookingbyId(bookingId);
+
+          if(tempBooking == null)
+        {
+            return null;
+        }
+
+        UserRetrievalResponse userDetails = new UserRetrievalResponse
+        (tempBooking.getUser().getUserId(),
+         tempBooking.getUser().getUserName(), tempBooking.getUser().getAge());
+
+         EventRetrievalResponse eventDetails = new EventRetrievalResponse
+         (tempBooking.getEvents().getEventpoolId(),
+          tempBooking.getEvents().getEventName(),
+           tempBooking.getEvents().getTicketType(), 
+           tempBooking.getEvents().getDescription(),
+            tempBooking.getEvents().getPrice());
+
+        return new BookingRetrievalResponse(bookingId, userDetails,eventDetails );
      }
   
      //////////////////////End Business Logic for Bookings Part /////////////////////////////
