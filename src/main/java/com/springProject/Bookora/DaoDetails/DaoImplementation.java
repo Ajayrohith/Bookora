@@ -10,14 +10,15 @@ import com.springProject.Bookora.Entities.User;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
 
 @Repository
 public class DaoImplementation implements DaoInterface{
 
+  
     private EntityManager entitymanagerObj;
 
-    public DaoImplementation(EntityManager entitymanagerObj)
-    {
+    public DaoImplementation(EntityManager entitymanagerObj) {
         this.entitymanagerObj = entitymanagerObj;
     }
      

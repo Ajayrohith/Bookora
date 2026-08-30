@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -28,11 +29,13 @@ public class Servicelayer {
 
     private JsonMapper jsonmapper;
 
+    private PasswordEncoder passwordEncoder;
 
-    public Servicelayer(DaoInterface daoobject,JsonMapper jsonmapper)
+    public Servicelayer(DaoInterface daoobject, JsonMapper jsonmapper, PasswordEncoder passwordEncoder)
     {
         this.daoobject = daoobject; 
-        this.jsonmapper = jsonmapper;      
+        this.jsonmapper = jsonmapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -44,6 +47,8 @@ public class Servicelayer {
             throw new UserdetailsException("User already exists");
         }
         else{
+             String encodedPassword = passwordEncoder.encode(sUser.getPassWord());
+             sUser.setPassWord(encodedPassword);
              return daoobject.updateuser(sUser);
         }
        
@@ -59,7 +64,7 @@ public class Servicelayer {
         {
             return false;
         }
-        return inputPassword.equals(passWordfromDb);
+        return passwordEncoder.matches(inputPassword, passWordfromDb);
     }
 
     public List<UserRetrievalResponse> getAllusers()

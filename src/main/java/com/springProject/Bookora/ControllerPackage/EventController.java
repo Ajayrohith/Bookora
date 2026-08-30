@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springProject.Bookora.Dto.Apiresponse;
 import com.springProject.Bookora.Entities.Eventdetails;
-import com.springProject.Bookora.ExceptionPackage.EventDetailsException;
 import com.springProject.Bookora.ServiceDetails.Servicelayer;
 
 @RestController
@@ -43,11 +42,11 @@ public class EventController {
         }
     }
 
-    @GetMapping("/findEvent/{eventId}")
-    public Eventdetails findEvent(@PathVariable int eventId)
-    {
-        return service.findEventbyid(eventId);
-    }
+    // @GetMapping("/findEvent/{eventId}")
+    // public Eventdetails findEvent(@PathVariable int eventId)
+    // {
+    //     return service.findEventbyid(eventId);
+    // }
 
     @PatchMapping("/updateEvent/{eventId}")
     public ResponseEntity<Apiresponse> updateEvent(@RequestBody Map<String,Object> patchPayload, @PathVariable int eventId)

@@ -6,12 +6,19 @@ public class Apiresponse {
 
     private String Response;
 
+    private String token;
+
     public Apiresponse() {
     }
 
     public Apiresponse(int customResponseCode, String response) {
+        this(customResponseCode, response, null);
+    }
+
+    public Apiresponse(int customResponseCode, String response, String token) {
         CustomResponseCode = customResponseCode;
         Response = response;
+        this.token = token;
     }
 
     public int getCustomResponseCode() {
@@ -30,11 +37,17 @@ public class Apiresponse {
         Response = response;
     }
 
-    @Override
-    public String toString() {
-        return "Apiresponse [CustomResponseCode=" + CustomResponseCode + ", Response=" + Response + "]";
+    public String getToken() {
+        return token;
     }
 
-    
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    @Override
+    public String toString() {
+        return "Apiresponse [CustomResponseCode=" + CustomResponseCode + ", Response=" + Response + ", token=" + token + "]";
+    }
 
 }

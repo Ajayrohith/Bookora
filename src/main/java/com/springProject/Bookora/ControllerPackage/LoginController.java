@@ -14,6 +14,7 @@ import com.springProject.Bookora.Dto.Apiresponse;
 import com.springProject.Bookora.Dto.UserRetrievalResponse;
 import com.springProject.Bookora.Dto.Userloginrequest;
 import com.springProject.Bookora.Entities.User;
+import com.springProject.Bookora.ServiceDetails.JwtService;
 import com.springProject.Bookora.ServiceDetails.Servicelayer;
 
 @RestController
@@ -22,9 +23,12 @@ public class LoginController {
 
     private Servicelayer service;
 
-    public LoginController(Servicelayer service)
+    private JwtService jwtService;
+
+    public LoginController(Servicelayer service, JwtService jwtService)
     {
         this.service = service;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/createuser")
@@ -40,7 +44,8 @@ public class LoginController {
     {
         if(service.validateUser(user))
         {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Apiresponse(0, "User password validation succesfull"));
+            String token = jwtService.generateToken(user.getUserName());
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Apiresponse(0, "User password validation successful", token));
         }
         else
         {
