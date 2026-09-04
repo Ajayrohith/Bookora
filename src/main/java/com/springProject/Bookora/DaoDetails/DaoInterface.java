@@ -14,8 +14,6 @@ public interface DaoInterface {
 
     public User finduserbyuserId(int id);
 
-    public String retrieveUserPassword(String username);
-
     public List<User> retriveuserList();
 
     public Eventdetails addnewEvent(Eventdetails event);

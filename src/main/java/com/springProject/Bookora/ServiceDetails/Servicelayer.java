@@ -13,7 +13,6 @@ import com.springProject.Bookora.DaoDetails.DaoInterface;
 import com.springProject.Bookora.Dto.BookingRetrievalResponse;
 import com.springProject.Bookora.Dto.EventRetrievalResponse;
 import com.springProject.Bookora.Dto.UserRetrievalResponse;
-import com.springProject.Bookora.Dto.Userloginrequest;
 import com.springProject.Bookora.Entities.Booking;
 import com.springProject.Bookora.Entities.Eventdetails;
 import com.springProject.Bookora.Entities.User;
@@ -52,19 +51,6 @@ public class Servicelayer {
              return daoobject.updateuser(sUser);
         }
        
-    }
-
-    public boolean validateUser(Userloginrequest suser)
-    {
-        String inputPassword = suser.getPassWord();
-        String passWordfromDb = daoobject.retrieveUserPassword(suser.getUserName());
-
-
-        if(passWordfromDb == null)
-        {
-            return false;
-        }
-        return passwordEncoder.matches(inputPassword, passWordfromDb);
     }
 
     public List<UserRetrievalResponse> getAllusers()

@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,10 +28,16 @@ public class LoginController {
 
     private JwtService jwtService;
 
-    public LoginController(Servicelayer service, JwtService jwtService)
+    private AuthenticationManager authenticationManager;
+
+    public LoginController(
+            Servicelayer service,
+            JwtService jwtService,
+            AuthenticationManager authenticationManager)
     {
         this.service = service;
         this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
     }
 
     @PostMapping("/createuser")
@@ -42,14 +51,16 @@ public class LoginController {
     @PostMapping("/authenticate")
     public ResponseEntity<Apiresponse> validateuser(@RequestBody Userloginrequest user)
     {
-        if(service.validateUser(user))
-        {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            user.getUserName(),
+                            user.getPassWord()));
+
             String token = jwtService.generateToken(user.getUserName());
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Apiresponse(0, "User password validation successful", token));
-        }
-        else
-        {
-            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(new Apiresponse(0, "Kindly re verify the credentials"));
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Apiresponse(-1, "Invalid username or password"));
         }
     }
 
