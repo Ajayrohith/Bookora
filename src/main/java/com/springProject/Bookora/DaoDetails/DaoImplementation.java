@@ -14,12 +14,12 @@ import jakarta.persistence.PersistenceContext;
 @Repository
 public class DaoImplementation implements DaoInterface{
 
-  
+    @PersistenceContext
     private EntityManager entitymanagerObj;
 
-    public DaoImplementation(EntityManager entitymanagerObj) {
-        this.entitymanagerObj = entitymanagerObj;
-    }
+    // public DaoImplementation(EntityManager entitymanagerObj) {
+    //     this.entitymanagerObj = entitymanagerObj;
+    // }
      
     @Override
     public User updateuser(User user) {

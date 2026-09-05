@@ -1,9 +1,5 @@
 package com.springProject.Bookora.Dto;
 
-import java.util.List;
-
-import com.springProject.Bookora.Entities.Eventdetails;
-import com.springProject.Bookora.Entities.User;
 
 public class BookingRetrievalResponse {
 
