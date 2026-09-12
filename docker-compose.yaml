@@ -1,0 +1,38 @@
+services:
+  app:
+    container_name: bookora_compose
+    image: ajayrohith/bookorahub:1.0.0
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - bookora_compose_network
+    depends_on:
+      - mysql
+    
+
+
+  mysql:
+    container_name: sql_compose
+    image : mysql:8  
+    volumes:
+      - mysql_compose_data:/var/lib/mysql
+    networks:
+      - bookora_compose_network
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=springstudent
+      - MYSQL_DATABASE=bookora
+      - MYSQL_USER=springstudent
+      - MYSQL_PASSWORD=springstudent
+      
+      
+
+
+volumes:
+ mysql_compose_data:
+
+networks:
+  bookora_compose_network:
