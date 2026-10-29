@@ -61,6 +61,16 @@ public class DaoImplementation implements DaoInterface{
     }
 
     @Override
+    public int reserveTicket(int eventID) {
+        return entitymanagerObj.createNativeQuery(
+                "UPDATE event_ticket_details "
+                        + "SET tickets_available = tickets_available - 1 "
+                        + "WHERE ticket_pool_id = :eventID AND tickets_available > 0")
+                .setParameter("eventID", eventID)
+                .executeUpdate();
+    }
+
+    @Override
     public List<User> retriveuserList() {
         
         return entitymanagerObj.createQuery("Select u from User u",User.class).getResultList();

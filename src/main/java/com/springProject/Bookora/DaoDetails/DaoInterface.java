@@ -20,6 +20,8 @@ public interface DaoInterface {
 
     public Eventdetails findEventbyId(int eventID);
 
+    public int reserveTicket(int eventID);
+
     public Booking createNewbooking(Booking booking);
 
     public Booking findBookingbyId(int bookingId);

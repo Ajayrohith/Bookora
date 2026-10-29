@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +20,7 @@ import com.springProject.Bookora.Entities.Booking;
 import com.springProject.Bookora.Entities.Eventdetails;
 import com.springProject.Bookora.Entities.User;
 import com.springProject.Bookora.ExceptionPackage.EventDetailsException;
+import com.springProject.Bookora.ExceptionPackage.TicketUnavailableException;
 import com.springProject.Bookora.ExceptionPackage.UserdetailsException;
 
 import jakarta.transaction.Transactional;
@@ -53,6 +57,7 @@ public class Servicelayer {
        
     }
 
+    @Cacheable (value = "USER_CACHE",key = "'userList'")
     public List<UserRetrievalResponse> getAllusers()
     {
 
@@ -76,12 +81,16 @@ public class Servicelayer {
      }
      
 
+     @Cacheable (value = "EVENT_CACHE",key = "#eventId",
+        condition = "#eventId>0",
+        unless = "#result == null")
      public Eventdetails findEventbyid(int eventId)
      {
         return daoobject.findEventbyId(eventId);
      }
   
     @Transactional
+    @CachePut (value = "EVENT_CACHE",key = "#eventId")
     public Eventdetails updateEventDetails(Map<String, Object> patchPayload, int eventId)
      {
         Eventdetails tempEvent = daoobject.findEventbyId(eventId);
@@ -110,41 +119,43 @@ public class Servicelayer {
 
      ///  //////////////////////Start Business Logic for Bookings Part /////////////////////////////
      @Transactional
+     @CacheEvict (value = "EVENT_CACHE",key = "#eventPoolId")
      public Booking createNewBooking(int userId,int eventPoolId)
      {
         User tempuser = daoobject.finduserbyuserId(userId);
-
-        System.out.println("Logger 1 : "+tempuser.toString());
 
         if(tempuser == null)
         {
             throw new UserdetailsException("The user does not exist");
         }
 
-        Eventdetails tempevent = daoobject.findEventbyId(eventPoolId);
-
-         System.out.println("Logger 2 : "+tempevent.toString());
-
-         if(tempevent == null)
+        int ticketsReserved = daoobject.reserveTicket(eventPoolId);
+        if(ticketsReserved == 0)
         {
-            throw new RuntimeException("The event details does not exist");
+            Eventdetails event = daoobject.findEventbyId(eventPoolId);
+            if(event == null)
+            {
+                throw new EventDetailsException("The event details do not exist");
+            }
+            throw new TicketUnavailableException("No tickets currently available for the event");
         }
 
-        if(tempevent.getTicketsAvailable() == 0)
+        Eventdetails tempevent = daoobject.findEventbyId(eventPoolId);
+        if(tempevent == null)
         {
-            throw new RuntimeException("No tickets currently available for the event");
+            throw new EventDetailsException("The event details do not exist");
         }
 
         Booking booking = new Booking();
         tempuser.addBookingstoUser(booking);
         tempevent.addBookingstoEvent(booking);
 
-        tempevent.setTicketsAvailable(tempevent.getTicketsAvailable() - 1);
-
-
         return daoobject.createNewbooking(booking);
      }
 
+     @Cacheable (value = "BOOKING_CACHE",key = "#bookingId",
+        condition = "#bookingId", unless = "#result == null"
+     )
      public BookingRetrievalResponse findBookingDetails(int bookingId)
      {
 

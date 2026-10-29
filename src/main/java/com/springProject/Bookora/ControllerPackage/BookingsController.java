@@ -13,6 +13,7 @@ import com.springProject.Bookora.Dto.Apiresponse;
 import com.springProject.Bookora.Dto.BookingRetrievalResponse;
 import com.springProject.Bookora.Dto.BookingsRequest;
 import com.springProject.Bookora.Entities.Booking;
+import com.springProject.Bookora.ExceptionPackage.TicketUnavailableException;
 import com.springProject.Bookora.ServiceDetails.Servicelayer;
 
 @RestController
@@ -34,6 +35,10 @@ public class BookingsController {
             System.out.println("The controller booking details : "+ tempBooking.toString());
             return ResponseEntity.ok(new Apiresponse(0, "The booking has been created"));
 
+        }
+        catch(TicketUnavailableException e)
+        {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new Apiresponse(-1, e.getMessage()));
         }
         catch(Exception e)
         {
