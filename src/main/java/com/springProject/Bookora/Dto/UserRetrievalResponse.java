@@ -1,7 +1,10 @@
 package com.springProject.Bookora.Dto;
 
-public class UserRetrievalResponse {
+import java.io.Serializable;
 
+public class UserRetrievalResponse implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int userId;
 

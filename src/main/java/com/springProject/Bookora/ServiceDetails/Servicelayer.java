@@ -41,6 +41,8 @@ public class Servicelayer {
         this.passwordEncoder = passwordEncoder;
     }
 
+    //The below cacheevict needs to be enabled but in order to test redis this has been commented
+    //@CacheEvict(value = "USER_CACHE", key = "'userList'")
     @Transactional
     public User createNewUser(User sUser)
     {
