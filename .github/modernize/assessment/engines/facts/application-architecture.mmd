@@ -1,0 +1,32 @@
+flowchart TD
+    subgraph Clients["Client and API Consumers"]
+        HTTP["HTTP Client"]
+        Swagger["Swagger OpenAPI"]
+    end
+    subgraph Docker["Docker Runtime"]
+        App["Spring Boot API"]
+    end
+    subgraph Application["Application Layer"]
+        Controllers["REST Controllers"]
+        Security["Spring Security and JWT"]
+        Services["Business Services"]
+    end
+    subgraph Data["Data and Cache Layer"]
+        JPA["JPA EntityManager"]
+        DB[("MySQL 8")]
+        Redis[("Redis Cache")]
+    end
+    subgraph AWS["AWS Deployment"]
+        ElasticBeanstalk["Elastic Beanstalk"]
+        RDS[("Amazon RDS")]
+    end
+    HTTP -->|"REST requests"| Controllers
+    Swagger -->|"API exploration"| Controllers
+    Controllers -->|"authentication"| Security
+    Security -->|"authorized request"| Services
+    Services -->|"JPA operations"| JPA
+    JPA -->|"SQL"| DB
+    Services -->|"cache read or write"| Redis
+    App -.-> Docker
+    ElasticBeanstalk -->|"hosts container"| App
+    App -->|"AWS profile"| RDS

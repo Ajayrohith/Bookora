@@ -11,7 +11,7 @@ This project is designed around a lightweight event ticketing workflow:
 - Users can create bookings for available events.
 - Booking details can be retrieved through the booking API.
 
-The project uses Spring Boot, Spring Security, JWT authentication, MySQL as the data store, Swagger/OpenAPI support, and Docker for containerization.
+The project uses Spring Boot, Spring Security, JWT authentication, MySQL for persistence, Redis for caching, Swagger/OpenAPI support, and Docker for containerization.
 
 ## Tech Stack
 
@@ -20,6 +20,8 @@ The project uses Spring Boot, Spring Security, JWT authentication, MySQL as the 
 - Spring Security
 - Spring Data JPA
 - MySQL Connector/J
+- Spring Data Redis and Spring Cache
+- Redis
 - JWT (`jjwt-api`, `jjwt-impl`, `jjwt-jackson`)
 - SpringDoc OpenAPI
 - Maven
@@ -69,6 +71,18 @@ src/
 
 The application uses Spring Security with stateless session management and JWT-based authentication. Public endpoints are limited to user creation and authentication. Protected event and booking endpoints require a valid JWT token.
 
+## Redis Caching
+
+Spring Cache is backed by Redis in the default, development, and Docker profiles. The application uses a five-minute cache time-to-live and connects to `localhost:6379` locally or to the `redis` service on the Docker Compose network.
+
+The service layer currently caches:
+
+- The user list in `USER_CACHE` under the `userList` key.
+- Event lookups in `EVENT_CACHE` by event ID. Updating an event refreshes its cache entry, and creating a booking evicts the affected event entry so ticket availability is reloaded from MySQL.
+- Booking lookups in `BOOKING_CACHE` by booking ID.
+
+User creation currently does not evict `USER_CACHE`; the corresponding `@CacheEvict` annotation is commented out, so a cached user list may remain stale until its five-minute expiration. The AWS profile currently configures MySQL/RDS but does not define Redis settings, so Redis caching is configured for local, development, and Docker use rather than the AWS profile.
+
 ## Configuration
 
 The application configuration is separated by environment profile:
@@ -76,7 +90,7 @@ The application configuration is separated by environment profile:
 - `application.properties` — default local configuration
 - `application-dev.properties` — development configuration
 - `application-docker.properties` — Docker profile configuration
-- `application-aws.properties` — AWS deployment configuration
+- `application-aws.properties` — AWS deployment configuration (MySQL/RDS)
 
 The current application setup is configured through Spring profile activation using Docker Compose or environment variables.
 
@@ -87,6 +101,7 @@ The current application setup is configured through Spring profile activation us
 - Java 17+
 - Maven
 - MySQL 8
+- Redis (or Docker Compose to run MySQL and Redis)
 - Docker (optional, for containerized setup)
 
 ### Run Locally
@@ -113,6 +128,7 @@ The `docker-compose.yaml` file includes:
 
 - `bookora_compose` application service using the project image from Docker Hub
 - `mysql_compose` MySQL 8 service with persistent volume storage
+- `redis_compose` Redis cache service
 
 Example Docker Compose service configuration:
 
@@ -120,17 +136,29 @@ Example Docker Compose service configuration:
 services:
   app:
     container_name: bookora_compose
-    image: ajayrohith/bookorahub:1.0.0
+    image: ajayrohith/bookorahub:1.0.3
     ports:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - mysql
+      - redis
 
   mysql:
     container_name: sql_compose
     image: mysql:8
     ports:
       - "3307:3306"
+    volumes:
+      - mysql_compose_data:/var/lib/mysql
+
+  redis:
+    container_name: redis_compose
+    image: redis:latest
+
+volumes:
+  mysql_compose_data:
 ```
 
 ## AWS Deployment Notes

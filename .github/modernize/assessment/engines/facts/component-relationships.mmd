@@ -1,0 +1,36 @@
+flowchart LR
+    subgraph Presentation["Presentation"]
+        cLogin["LoginController"]
+        cEvent["EventController"]
+        cBooking["BookingsController"]
+    end
+    subgraph SecurityLayer["Security"]
+        cJwt["JwtService"]
+        cFilter["JwtAuthenticationFilter"]
+        cConfig["AppConfig"]
+    end
+    subgraph Business["Business Logic"]
+        cService["Servicelayer"]
+        cExceptions["Global Exception Handler"]
+    end
+    subgraph DataAccess["Data Access"]
+        cDao["DaoImplementation"]
+        cInterface["DaoInterface"]
+        cEntities["User, Eventdetails, Booking"]
+    end
+    subgraph Infrastructure["Infrastructure"]
+        cMysql[("MySQL")]
+        cRedis[("Redis")]
+    end
+    cLogin -->|"authentication and users"| cService
+    cEvent -->|"event operations"| cService
+    cBooking -->|"booking operations"| cService
+    cFilter -->|"validates token"| cJwt
+    cFilter -->|"loads identity"| cConfig
+    cConfig -.->|"protects routes"| Presentation
+    cService -->|"uses"| cInterface
+    cInterface -.->|"implemented by"| cDao
+    cDao -->|"EntityManager"| cEntities
+    cEntities -->|"JPA persistence"| cMysql
+    cService -->|"cache annotations"| cRedis
+    cService -.->|"domain exceptions"| cExceptions

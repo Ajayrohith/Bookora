@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+  <rect width="1080" height="1350" fill="#07111F"/>
+  <circle cx="925" cy="126" r="220" fill="#10243D"/>
+  <circle cx="925" cy="126" r="150" fill="#183654"/>
+  <text x="80" y="118" fill="#58A6FF" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">PORTFOLIO PROJECT</text>
+  <text x="80" y="192" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="700">BOOKORA</text>
+  <text x="80" y="238" fill="#A7B8CC" font-family="Arial, Helvetica, sans-serif" font-size="28">Event booking backend API</text>
+
+  <rect x="80" y="310" width="920" height="160" rx="24" fill="#0E1B2E" stroke="#263B55" stroke-width="2"/>
+  <text x="112" y="354" fill="#8FA4BE" font-family="Arial" font-size="19">CLIENTS</text>
+  <text x="112" y="408" fill="#FFFFFF" font-family="Arial" font-size="34" font-weight="700">REST API + Swagger</text>
+  <text x="112" y="444" fill="#58A6FF" font-family="Arial" font-size="21">HTTP requests and API documentation</text>
+
+  <rect x="80" y="510" width="920" height="160" rx="24" fill="#18304F" stroke="#58A6FF" stroke-width="2"/>
+  <text x="112" y="554" fill="#A7B8CC" font-family="Arial" font-size="19">SECURITY</text>
+  <text x="112" y="608" fill="#FFFFFF" font-family="Arial" font-size="34" font-weight="700">Spring Security + JWT</text>
+  <text x="112" y="644" fill="#B5D6FF" font-family="Arial" font-size="21">Stateless authentication + BCrypt passwords</text>
+
+  <rect x="80" y="710" width="920" height="160" rx="24" fill="#21385B" stroke="#263B55" stroke-width="2"/>
+  <text x="112" y="754" fill="#A7B8CC" font-family="Arial" font-size="19">CORE</text>
+  <text x="112" y="808" fill="#FFFFFF" font-family="Arial" font-size="34" font-weight="700">Spring Boot + JPA</text>
+  <text x="112" y="844" fill="#C0CCE0" font-family="Arial" font-size="21">Users, events, bookings, inventory and caching</text>
+
+  <rect x="80" y="910" width="438" height="218" rx="24" fill="#102F38" stroke="#2DD4BF" stroke-width="2"/>
+  <text x="112" y="958" fill="#2DD4BF" font-family="Arial" font-size="19" font-weight="700">PERSISTENCE</text>
+  <text x="112" y="1018" fill="#FFFFFF" font-family="Arial" font-size="32" font-weight="700">MySQL 8</text>
+  <text x="112" y="1060" fill="#A7C7C2" font-family="Arial" font-size="19">Amazon RDS ready</text>
+
+  <rect x="562" y="910" width="438" height="218" rx="24" fill="#2A2345" stroke="#A78BFA" stroke-width="2"/>
+  <text x="594" y="958" fill="#A78BFA" font-family="Arial" font-size="19" font-weight="700">PERFORMANCE</text>
+  <text x="594" y="1018" fill="#FFFFFF" font-family="Arial" font-size="32" font-weight="700">Redis Cache</text>
+  <text x="594" y="1060" fill="#C9BDF5" font-family="Arial" font-size="19">Docker Compose ready</text>
+
+  <rect x="80" y="1170" width="920" height="100" rx="24" fill="#111F31"/>
+  <text x="112" y="1210" fill="#58A6FF" font-family="Arial" font-size="18" font-weight="700">DEPLOYMENT</text>
+  <text x="112" y="1245" fill="#FFFFFF" font-family="Arial" font-size="24">Docker  |  AWS Elastic Beanstalk  |  Amazon RDS</text>
+</svg>
